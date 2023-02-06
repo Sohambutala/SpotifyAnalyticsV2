@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>Spotify Login</title>
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="{{ url_for('static',filename='styles/Spotify.css') }}">
+</head>
+
+<body style="background-color: black;">
+
+  <body>
+
+    <div class="vertical-align-items">
+      <div class="container" style="align-items: center; text-align: center;">
+        <img src="{{ url_for('static',filename='styles/logo_spotify.png') }}" alt="Spotify Logo" width="80px"
+          height="auto">
+        <h1 class="text-center" style="color: #1ED760; font-family: gotham-light;">Spotify Login</h1>
+        <p style="margin-top: 20px; color: white; font-size: 14px; font-family: gotham-light;">Please enter the same email id which was used to
+          fill
+          the google form</p>
+      </div>
+
+      <div class="container">
+        <div class="row" style="display: flex; justify-content: center;">
+          <div class="col-12 col-sm-12 col-md-9 col-lg-6 col-xl-6">
+            <div class="jumbotron my-auto" style="background-color: black; ">
+              <form method="POST" action="/">
+                <div class="form-group" >
+                  <label for="email" style="color: white; text-align: left !important; font-family: gotham-light;">Email</label>
+                  <input type="email" class="form-control email_css" name="email"
+                    style="border: none; border-bottom: 2px solid white; background: transparent; border-radius: 0%; outline: none; background-color: black;">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Log In</button>
+              </form>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <hr style="width: 30%;">
+      <footer>
+        <p style="color: white; text-align: center; font-size: 12px;font-family: gotham-light;letter-spacing: 0.3px;">If you are facing any issue, please contact aadi2000@uw.edu / sbutala@uw.edu and we will be happy to help you.
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>
