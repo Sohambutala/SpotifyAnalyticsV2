@@ -1,4 +1,5 @@
 spotipy
 flask
 pandas
-pyrebase
+flask_session
+PyJWT
