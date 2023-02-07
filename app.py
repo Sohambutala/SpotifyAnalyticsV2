@@ -54,7 +54,9 @@ def index():
 
     cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
     auth_manager = spotipy.oauth2.SpotifyOAuth(scope="user-library-read,user-read-recently-played,user-read-playback-state,user-follow-read,user-read-currently-playing,user-top-read",                                               cache_handler=cache_handler,
-                                               show_dialog=True)
+                                               show_dialog=True, client_id="68047f44ff734cc79576042bbbf43358",
+                                               client_secret="3ca39cfe870e4919876624ddd9a98ca0",
+                                               redirect_uri="http://spotifydataanalytics.azurewebsites.net")
 
     if request.args.get("code"):
         # Step 2. Being redirected from Spotify auth page
