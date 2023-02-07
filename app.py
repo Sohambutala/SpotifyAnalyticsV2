@@ -25,7 +25,7 @@ import os
 from flask import Flask, session, request, redirect, render_template
 from flask_session import Session
 import spotipy
-import pyrebase
+#import pyrebase
 import pandas as pd
 import json
 
@@ -46,8 +46,8 @@ config = {
     "serviceAccount":"spotifydataanalysis-firebase-adminsdk-52bcp-8ed0394572.json"
     
 }
-firebase = pyrebase.initialize_app(config)
-storage = firebase.storage()
+#firebase = pyrebase.initialize_app(config)
+#storage = firebase.storage()
 
 @app.route('/')
 def index():
@@ -108,7 +108,7 @@ def index():
     #storing data in json
     with open(name+'.json', 'w') as f:
         json.dump(final, f)
-    storage.child("data/"+name+".json").put(name+'.json')
+    #storage.child("data/"+name+".json").put(name+'.json')
     
     
     return render_template('Exit.html')
