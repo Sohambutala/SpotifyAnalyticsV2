@@ -35,6 +35,9 @@ app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SESSION_FILE_DIR'] = './.flask_session/'
 Session(app)
 
+app.secret_key = 'dsajnfirunvaipnbdfr'
+app.config['SESSION_COOKIE_NAME'] = 'My_own_cookie'
+
 #firebase config
 config = {
     "apiKey": "AIzaSyDrNPUIT3D84YD-XXUWtDi1M9K9i62R-O8",
@@ -51,37 +54,51 @@ config = {
 
 @app.route('/')
 def initialize():
+    session['ver']=0
     return render_template('Home.html')
 
 
-@app.route('/oauth', methods=['POST'])
+@app.route('/oauth', methods=['GET','POST'])
 def index():
-    user_email = request.form['email']
-    df=pd.read_csv("data/spotify_emails_responses.csv")
-    #Assuming that this has email, names, split(number, denoting the split of the email)
-    ver=df[df['email']==user_email]['split'][0]
     cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
-    
+    if request.method == 'POST':
+        print('inside index')
+        user_email = request.form['email']
+        df=pd.read_csv("data/spotify_emails_responses.csv")
+        #Assuming that this has email, names, split(number, denoting the split of the email)
+        print(user_email)
+        ver=int(df[df['email']==user_email]['split'])
+        session["ver"]=ver
+        
+    ver=session["ver"]
+    #redirect_uri="http://spotifydataanalytics.azurewebsites.net"
     if ver==1:
-        auth_manager = spotipy.oauth2.SpotifyOAuth(scope="user-library-read,user-read-recently-played,user-read-playback-state,user-follow-read,user-read-currently-playing,user-top-read",                                               cache_handler=cache_handler,
-                                               show_dialog=True, client_id="68047f44ff734cc79576042bbbf43358",
-                                               client_secret="3ca39cfe870e4919876624ddd9a98ca0",
-                                               redirect_uri="http://spotifydataanalytics.azurewebsites.net")
+        auth_manager = spotipy.oauth2.SpotifyOAuth(scope="user-library-read,user-read-recently-played,user-read-playback-state,user-follow-read,user-read-currently-playing,user-top-read", 
+                                                cache_handler=cache_handler,
+                                            show_dialog=True, client_id="68047f44ff734cc79576042bbbf43358",
+                                            client_secret="3ca39cfe870e4919876624ddd9a98ca0",
+                                            redirect_uri="http://spotifydataanalytics.azurewebsites.net/oauth"
+                                            )
     else:
-        auth_manager = spotipy.oauth2.SpotifyOAuth(scope="user-library-read,user-read-recently-played,user-read-playback-state,user-follow-read,user-read-currently-playing,user-top-read",                                               cache_handler=cache_handler,
-                                               show_dialog=True, client_id="68047f44ff734cc79576042bbbf43358",
-                                               client_secret="3ca39cfe870e4919876624ddd9a98ca0",
-                                               redirect_uri="http://spotifydataanalytics.azurewebsites.net")
+        if session['ver']==0:
+            print('error')
+        auth_manager = spotipy.oauth2.SpotifyOAuth(scope="user-library-read,user-read-recently-played,user-read-playback-state,user-follow-read,user-read-currently-playing,user-top-read", 
+                                                cache_handler=cache_handler,
+                                            show_dialog=True, client_id="68047f44ff734cc79576042bbbf43358",
+                                            client_secret="3ca39cfe870e4919876624ddd9a98ca0",
+                                            redirect_uri="http://spotifydataanalytics.azurewebsites.net/oauth")
 
     if request.args.get("code"):
         # Step 2. Being redirected from Spotify auth page
+        print('got the code')
         auth_manager.get_access_token(request.args.get("code"))
-        return redirect('/')
+        return redirect('/oauth')
 
     if not auth_manager.validate_token(cache_handler.get_cached_token()):
         # Step 1. Display sign in link when no token
         auth_url = auth_manager.get_authorize_url()
-        return render_template('Home.html')
+        return redirect(auth_url)
+        #render_template('Home.html')
 
 
     # Step 3. Signed in, display data
@@ -120,6 +137,7 @@ def index():
 
     name=final['current_user']['uri'].split(':')[2]
 
+    #print(final)
     #storing data in json
     with open(name+'.json', 'w') as f:
         json.dump(final, f)
