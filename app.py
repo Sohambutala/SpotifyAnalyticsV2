@@ -50,10 +50,25 @@ config = {
 #storage = firebase.storage()
 
 @app.route('/')
-def index():
+def initialize():
+    return render_template('Home.html')
 
+
+@app.route('/oauth', methods=['POST'])
+def index():
+    user_email = request.form['email']
+    df=pd.read_csv("data/spotify_emails_responses.csv")
+    #Assuming that this has email, names, split(number, denoting the split of the email)
+    ver=df[df['email']==user_email]['split'][0]
     cache_handler = spotipy.cache_handler.FlaskSessionCacheHandler(session)
-    auth_manager = spotipy.oauth2.SpotifyOAuth(scope="user-library-read,user-read-recently-played,user-read-playback-state,user-follow-read,user-read-currently-playing,user-top-read",                                               cache_handler=cache_handler,
+    
+    if ver==1:
+        auth_manager = spotipy.oauth2.SpotifyOAuth(scope="user-library-read,user-read-recently-played,user-read-playback-state,user-follow-read,user-read-currently-playing,user-top-read",                                               cache_handler=cache_handler,
+                                               show_dialog=True, client_id="68047f44ff734cc79576042bbbf43358",
+                                               client_secret="3ca39cfe870e4919876624ddd9a98ca0",
+                                               redirect_uri="http://spotifydataanalytics.azurewebsites.net")
+    else:
+        auth_manager = spotipy.oauth2.SpotifyOAuth(scope="user-library-read,user-read-recently-played,user-read-playback-state,user-follow-read,user-read-currently-playing,user-top-read",                                               cache_handler=cache_handler,
                                                show_dialog=True, client_id="68047f44ff734cc79576042bbbf43358",
                                                client_secret="3ca39cfe870e4919876624ddd9a98ca0",
                                                redirect_uri="http://spotifydataanalytics.azurewebsites.net")
