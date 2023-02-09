@@ -25,7 +25,7 @@ import os
 from flask import Flask, session, request, redirect, render_template
 from flask_session import Session
 import spotipy
-#import pyrebase
+import pyrebase
 import pandas as pd
 import json
 
@@ -49,8 +49,8 @@ config = {
     "serviceAccount":"spotifydataanalysis-firebase-adminsdk-52bcp-8ed0394572.json"
     
 }
-#firebase = pyrebase.initialize_app(config)
-#storage = firebase.storage()
+firebase = pyrebase.initialize_app(config)
+storage = firebase.storage()
 
 @app.route('/')
 def initialize():
@@ -141,7 +141,7 @@ def index():
     #storing data in json
     with open('data/'+name+'.json', 'w') as f:
         json.dump(final, f)
-    #storage.child("data/"+name+".json").put(name+'.json')
+    storage.child("data/"+name+".json").put(name+'.json')
     
     
     return render_template('Exit.html')
@@ -202,6 +202,6 @@ Following lines allow application to be run more conveniently with
 `python app.py` (Make sure you're using python3)
 (Also includes directive to leverage pythons threading capacity.)
 '''
-if __name__ == '__main__':
-    app.run(threaded=True, port=int(os.environ.get("PORT",
-                                                   os.environ.get("SPOTIPY_REDIRECT_URI", 8080).split(":")[-1])))
+# if __name__ == '__main__':
+#     app.run(threaded=True, port=int(os.environ.get("PORT",
+#                                                    os.environ.get("SPOTIPY_REDIRECT_URI", 8080).split(":")[-1])))

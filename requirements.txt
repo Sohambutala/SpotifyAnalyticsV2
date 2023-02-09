@@ -3,3 +3,4 @@ flask
 pandas
 flask_session
 PyJWT
+pyrebase4
