@@ -139,7 +139,7 @@ def index():
 
     #print(final)
     #storing data in json
-    with open(name+'.json', 'w') as f:
+    with open('data/'+name+'.json', 'w') as f:
         json.dump(final, f)
     #storage.child("data/"+name+".json").put(name+'.json')
     
