@@ -59,7 +59,7 @@
   }
 
 input, select, textarea{
-    color: white;
+    color: white !important;
 }
 
 textarea:focus, input:focus {
